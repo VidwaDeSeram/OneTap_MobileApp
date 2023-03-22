@@ -32,6 +32,7 @@ const Login = () => {
             .send({ username, password });
       
           if (response.status === 200) {
+            await AsyncStorage.setItem('token', response.body.token);
             // Save the user data (and token, if applicable) to local storage or state management
             // localStorage.setItem('userInfo', JSON.stringify(response.body.user));
             // Navigate to the 'Home' screen
