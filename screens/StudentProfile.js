@@ -1,12 +1,48 @@
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Image, SafeAreaView, ScrollView , TextInput} from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar';
 import { AdjustmentsHorizontalIcon, UserIcon, EnvelopeIcon, PhoneIcon,MapPinIcon, IdentificationIcon, CalendarDaysIcon, AcademicCapIcon, UserGroupIcon} from 'react-native-heroicons/outline';
 import StudentIDCard from '../components/StudentIDCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const StudentProfile = () => {
     const navigation = useNavigation();
+
+    const [profileData, setProfileData] = useState({
+      id: '',
+      username: '',
+      email: '',
+      phone: '',
+      address: '',
+      dob: '',
+      degree: '',
+      batch: '',
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+  
+        const response = await fetch(`http://192.168.1.172:3000/api/user/profile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+  
+        const data = await response.json();
+        setProfileData(data);
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+  
+    fetchProfile();
+  }, []);
 
     useLayoutEffect(()=> {
         navigation.setOptions({
@@ -54,7 +90,7 @@ const StudentProfile = () => {
               <UserIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Full Name'
+                  value={profileData.username}
               />
             </View>
             {/* Email */}
@@ -62,7 +98,7 @@ const StudentProfile = () => {
               <EnvelopeIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Email'
+                  value={profileData.email}
               />
             </View>
             {/* Tel No */}
@@ -70,7 +106,7 @@ const StudentProfile = () => {
               <PhoneIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Telephone Number'
+                  value={profileData.phone}
               />
             </View>
             {/* Location */}
@@ -78,7 +114,7 @@ const StudentProfile = () => {
               <MapPinIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Address'
+                  value={profileData.address}
               />
             </View>
             {/* NIC */}
@@ -94,7 +130,7 @@ const StudentProfile = () => {
               <CalendarDaysIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Date Of Birth'
+                  value={profileData.dob}
               />
             </View>
             {/* Degree */}
@@ -102,7 +138,7 @@ const StudentProfile = () => {
               <AcademicCapIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Degree'
+                  value={profileData.degree}
               />
             </View>
             {/* Batch */}
@@ -110,7 +146,7 @@ const StudentProfile = () => {
               <UserGroupIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Batch'
+                  value={profileData.batch}
               />
             </View>
           </View>

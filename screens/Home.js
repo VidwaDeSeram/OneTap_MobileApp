@@ -23,6 +23,10 @@ const Home = () => {
   const performancePress = () => {
     navigation.navigate('Performance')
   }
+
+  const calendarPress = () => {
+    navigation.navigate('Calendar')
+  }
   useLayoutEffect(()=> {
     navigation.setOptions({
         headerShown: false,
@@ -66,7 +70,7 @@ const Home = () => {
         <TouchableOpacity onPress={PaymentScreenPress}>
           <Image source={require('../assets/HomePaymentsImg.png')}/>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={calendarPress}>
           <Image source={require('../assets/HomeCalendarImg.png')}/>
         </TouchableOpacity>
         <TouchableOpacity onPress={performancePress}>

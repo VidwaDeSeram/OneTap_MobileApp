@@ -12,6 +12,7 @@ import PaymentScreen from './screens/PaymentScreen';
 import PerformanceScreen from './screens/PerformanceScreen';
 import { useState } from 'react';
 import * as Font from 'expo-font';
+import CalendarScreen from './screens/CalendarScreen';
 
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
         <Stack.Screen name='MapScreen' component={MapScreen}/>
         <Stack.Screen name='PaymentScreen' component={PaymentScreen}/>
         <Stack.Screen name="Performance" component={PerformanceScreen}/>
+        <Stack.Screen name="Calendar" component={CalendarScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
 
