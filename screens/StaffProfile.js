@@ -1,13 +1,47 @@
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Image, SafeAreaView, ScrollView , TextInput} from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Image, SafeAreaView, TextInput} from 'react-native'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar';
-import { AdjustmentsHorizontalIcon, UserIcon, EnvelopeIcon, PhoneIcon,MapPinIcon, IdentificationIcon, CalendarDaysIcon, ClipboardDocumentCheckIcon} from 'react-native-heroicons/outline';
-import StudentIDCard from '../components/StudentIDCard';
+import { AdjustmentsHorizontalIcon, UserIcon, EnvelopeIcon, PhoneIcon,MapPinIcon, IdentificationIcon, CalendarDaysIcon, AcademicCapIcon, UserGroupIcon, ClipboardDocumentCheckIcon} from 'react-native-heroicons/outline';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StaffProfile = () => {
     const navigation = useNavigation();
 
+    const [profileData, setProfileData] = useState({
+      id: '',
+      username: '',
+      email: '',
+      phone: '',
+      address: '',
+      dob: '',
+      degree: '',
+      batch: '',
+    });
+
+    useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          const token = await AsyncStorage.getItem('token');
+    
+          const response = await fetch(`http://172.20.10.6:3000/api/user/profile`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+    
+          const data = await response.json();
+          setProfileData(data);
+        } catch (error) {
+          console.error('Error fetching profile data:', error);
+        }
+      };
+    
+      fetchProfile();
+    }, []);
+  
     useLayoutEffect(()=> {
         navigation.setOptions({
             headerShown: false,
@@ -37,7 +71,7 @@ const StaffProfile = () => {
               <UserIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Full Name'
+                  value={profileData.username}
               />
             </View>
             {/* Email */}
@@ -45,7 +79,7 @@ const StaffProfile = () => {
               <EnvelopeIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Email'
+                  value={profileData.email}
               />
             </View>
             {/* Tel No */}
@@ -53,7 +87,7 @@ const StaffProfile = () => {
               <PhoneIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Telephone Number'
+                  value={profileData.phone}
               />
             </View>
             {/* Location */}
@@ -61,7 +95,7 @@ const StaffProfile = () => {
               <MapPinIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Address'
+                  value={profileData.address}
               />
             </View>
             {/* NIC */}
@@ -77,7 +111,7 @@ const StaffProfile = () => {
               <CalendarDaysIcon color='#1B4332' size={30}/>
               <TextInput
                   style={styles.textInput}
-                  value='Date Of Birth'
+                  value={profileData.dob}
               />
             </View>
             {/* Reponisibility */}

@@ -26,7 +26,7 @@ const StudentProfile = () => {
       try {
         const token = await AsyncStorage.getItem('token');
   
-        const response = await fetch(`http://192.168.1.172:3000/api/user/profile`, {
+        const response = await fetch(`http://172.20.10.6:3000/api/user/profile`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
