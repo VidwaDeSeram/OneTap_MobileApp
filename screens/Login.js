@@ -25,6 +25,7 @@ const Login = () => {
     const [staffActive, setStaffActive] = useState(false);
   
     const navigation = useNavigation();
+    
     const handlePress = async () => {
         try {
           const response = await superagent
@@ -36,7 +37,12 @@ const Login = () => {
             // Save the user data (and token, if applicable) to local storage or state management
             // localStorage.setItem('userInfo', JSON.stringify(response.body.user));
             // Navigate to the 'Home' screen
-            navigation.navigate('Home');
+            if(userType == 'student'){
+                navigation.navigate('Home');
+            }else{
+                navigation.navigate('StaffHome');
+            }
+
           } else {
             // Display error message
             console.error('Error during authentication:', response.body.message);
@@ -57,10 +63,6 @@ const Login = () => {
       setStaffActive(true);
       setUserType('staff');
     };
-
-    const handleLogin = () =>{
-        navigation.navigate('Home');
-    }
 
     useLayoutEffect(() => {
         navigation.setOptions({

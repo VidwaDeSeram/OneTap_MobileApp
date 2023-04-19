@@ -1,12 +1,46 @@
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Image, SafeAreaView, ScrollView} from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar';
 import { AdjustmentsHorizontalIcon} from 'react-native-heroicons/outline';
 import LectureItem from '../components/LectureItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CalendarScreen = () => {
     const navigation = useNavigation();
+
+    const [lectures, setLectures] = useState({
+      id: '',
+      date: '',
+      subject: '',
+      faculty: '',
+      degree: '',
+      batch: '',
+      startTime: '',
+      endTime: '',
+      location: '',
+  });
+
+  useEffect(() => {
+    const fetchLectureData = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const response = await fetch('http://172.20.10.6:3000/api/time/user-lectures', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const data = await response.json();
+        setLectures(data);
+      } catch (error) {
+        console.log('Error fetching lecture data:', error);
+      }
+    };
+
+    fetchLectureData();
+  }, []);
 
     useLayoutEffect(()=> {
         navigation.setOptions({
@@ -40,15 +74,15 @@ const CalendarScreen = () => {
         <View style={styles.detailContainer}>
             <Text style={{fontSize:20, fontWeight: 700}}>Module Name</Text>
             <View style={styles.detailModuleContainer}>
-                <Text style={{fontSize: 18, fontWeight:500}}>Sample Module Name</Text>
+                <Text style={{fontSize: 18, fontWeight:500}}>{lectures.subject}</Text>
             </View>
-            <Text style={{fontSize:20, fontWeight: 700}}>Lecturer Name</Text>
+            <Text style={{fontSize:20, fontWeight: 700}}>Lecturer Hall</Text>
             <View style={styles.detailModuleContainer}>
-                <Text style={{fontSize: 18, fontWeight:500}}>Lecturer Sample Name</Text>
+                <Text style={{fontSize: 18, fontWeight:500}}>{lectures.location}</Text>
             </View>
-            <Text style={{fontSize:20, fontWeight: 700}}>Lecture Hall</Text>
+            <Text style={{fontSize:20, fontWeight: 700}}>Lecture Time</Text>
             <View style={styles.detailModuleContainer}>
-                <Text style={{fontSize: 18, fontWeight:500}}>Sample Lecture Hall</Text>
+                <Text style={{fontSize: 18, fontWeight:500}}>{lectures.startTime}:{lectures.endTime}</Text>
             </View>
         </View>
       </View>

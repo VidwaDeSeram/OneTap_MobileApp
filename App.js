@@ -13,6 +13,8 @@ import PerformanceScreen from './screens/PerformanceScreen';
 import { useState } from 'react';
 import * as Font from 'expo-font';
 import CalendarScreen from './screens/CalendarScreen';
+import StaffHomeScreen from './screens/StaffHomeScreen';
+import PaypalComponent from './components/PaypalComponent';
 
 
 export default function App() {
@@ -44,6 +46,8 @@ export default function App() {
         <Stack.Screen name='PaymentScreen' component={PaymentScreen}/>
         <Stack.Screen name="Performance" component={PerformanceScreen}/>
         <Stack.Screen name="Calendar" component={CalendarScreen}/>
+        <Stack.Screen name="StaffHome" component={StaffHomeScreen}/>
+        <Stack.Screen name="PayPal" component={PaypalComponent}/>
       </Stack.Navigator>
     </NavigationContainer>
 
