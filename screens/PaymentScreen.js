@@ -1,12 +1,33 @@
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Image, SafeAreaView, Pressable, TextInput } from 'react-native'
-import React, { useLayoutEffect, useState } from 'react'
+import { View, Text, StyleSheet, ImageBackground, TouchableOpacity, Image, SafeAreaView, TextInput, Pressable } from 'react-native'
+import React, { useLayoutEffect, useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { StatusBar } from 'expo-status-bar';
 import { AdjustmentsHorizontalIcon, CreditCardIcon} from 'react-native-heroicons/outline';
 import { Picker } from '@react-native-picker/picker';
+import { WebView } from 'react-native-webview';
+import PaypalComponent from '../components/PaypalComponent';
 
 const PaymentScreen = () => {
     const navigation = useNavigation();
+
+    const [paymentUrl, setPaymentUrl] = useState(null);
+
+    useEffect(() => {
+        createPayment();
+    }, []);
+
+    const createPayment = async () => {
+      try {
+        const response = await fetch('http://172.20.10.6:3000/create-payment');
+        const data = await response.json();
+        console.log(data); // <-- add this line to log the data
+        const { approvalLink } = data;
+        setPaymentUrl(approvalLink);
+      } catch (error) {
+        console.error('Failed to create payment:', error);
+      }
+    };
+    
 
     const [selectedOption, setSelectedOption] = useState('');
     const [showPayment, setShowPayment] = useState(false);
@@ -18,9 +39,13 @@ const PaymentScreen = () => {
     }, [])
 
     const handleSelectOption = (option) => {
-        setSelectedOption(option);
-        setShowPayment(true);
+      setSelectedOption(option);
+      setShowPayment(true);
     };
+    
+    const PaypalScreen = () =>{
+      navigation.navigate('PayPal');
+    }
 
   return (
     <View style={{flex:1}}>
@@ -60,8 +85,8 @@ const PaymentScreen = () => {
                 <TextInput style={styles.PaymentInput} placeholder="Enter Amount"/>
                 <TextInput style={styles.PaymentInput} placeholder="Enter Payment Method"/>
             </View>
-            <Pressable style={styles.SelectBtn}>
-                <Text style={styles.SelectText}>Pay Now</Text>
+            <Pressable style={styles.SelectBtn} onPress={PaypalScreen}>
+              <Text style={styles.SelectText}>Pay Now</Text>
             </Pressable>
         </View>
       )}
